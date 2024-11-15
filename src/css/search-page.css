@@ -54,12 +54,12 @@
     gap: 24px;
     flex-wrap: wrap;
      margin-top: 25px; 
-
+     justify-content: center;
   }
   
    .gallery-list-item {
     border: 1px solid rgba(15, 15, 15, 0.568);
-     width: calc((100% - 48px) / 3);  
+       width: calc((100% - 96px) / 5);    
   } 
    
   .gallery-card-list{

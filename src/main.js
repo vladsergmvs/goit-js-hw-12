@@ -3,8 +3,9 @@ import 'izitoast/dist/css/iziToast.min.css';
 // //////////////////////////////////
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import axios from 'axios';
 
-import { fetchData } from './js/pixabay-api';
+import { getData } from './js/pixabay-api';
 import { createMarkup } from './js/render-functions';
 
 //////////////////////////////////////////////////////
@@ -21,31 +22,36 @@ document.querySelector('.search-input').addEventListener('click', event => {
 
 form.addEventListener('submit', handleSubmit);
 
-function handleSubmit(event) {
+/////////
+async function handleSubmit(event) {
   loader.classList.add('is-open');
   event.preventDefault();
-  const searchQuery = event.target.elements.searchQuery.value;
+  const searchQuery = event.target.elements.searchQuery.value.trim();
   if (searchQuery === '') {
     return;
   }
-  fetchData(searchQuery)
-    .then(data => {
-      data.hits.length !== 0
-        ? (galleryList.innerHTML = createMarkup(data.hits))
-        : (iziToast.error({
-            message:
-              'Sorry, there are no images matching your search query. Please try again!',
-            position: 'topRight',
-          }),
-          (galleryList.innerHTML = ''));
-      loader.classList.remove('is-open');
+  try {
+    const response = await getData(searchQuery);
+    if (response.hits.length !== 0) {
+      galleryList.innerHTML = createMarkup(response.hits);
+
       let gallery = new SimpleLightbox('.js-gallery-list a', {
         captionsData: 'alt',
         captionDelay: 250,
       });
       gallery.refresh();
-    })
-    .catch(error => {
-      console.log('catch', error);
-    });
+    } else {
+      galleryList.innerHTML = '';
+      iziToast.error({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+        position: 'topRight',
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loader.classList.remove('is-open');
+  }
+  /////////
 }
