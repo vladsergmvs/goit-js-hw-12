@@ -5,7 +5,7 @@ const BASE_URL = 'https://pixabay.com/api/',
 
 export async function getData(searchQuery, page) {
   try {
-    const response = await axios.get(`${BASE_URL}`, {
+    const { data } = await axios.get(`${BASE_URL}`, {
       params: {
         key: API_KEY,
         q: searchQuery,
@@ -16,7 +16,7 @@ export async function getData(searchQuery, page) {
         page,
       },
     });
-    return response.data;
+    return data;
   } catch (error) {
     console.log(error);
   }

@@ -3,7 +3,6 @@ import 'izitoast/dist/css/iziToast.min.css';
 // //////////////////////////////////
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import axios from 'axios';
 
 import { getData } from './js/pixabay-api';
 import { createMarkup } from './js/render-functions';
@@ -58,9 +57,11 @@ async function handleSubmit(event) {
   /////////
 }
 ////////////////////////////////////////////////
+
 loadMore.addEventListener('click', handleClick);
 
 async function handleClick(event) {
+  /////
   page += 1;
   loader.classList.add('is-hidden');
 
@@ -81,6 +82,15 @@ async function handleClick(event) {
       galleryList.innerHTML = '';
       iziToastMessage();
     }
+
+    const card = document.querySelector('.gallery-list-item'),
+      cardHeight = card.getBoundingClientRect().height;
+
+    window.scrollBy({
+      left: 0,
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
   } catch (error) {
     console.log(error);
   } finally {
