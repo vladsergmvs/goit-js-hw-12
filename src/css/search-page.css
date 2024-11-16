@@ -62,9 +62,9 @@
    .gallery-list-item {
     margin: 0px;
     border: 1px solid rgba(15, 15, 15, 0.568);
-    /* width: calc((100% - 96px) / 5);     */
+    /* width: calc((100% - 20px) / 5);      */
   } 
-   
+    
   .gallery-card-list{
     display: flex;
     flex-direction:row;

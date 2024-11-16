@@ -32,6 +32,7 @@ async function handleSubmit(event) {
   page = 1;
   searchQuery = event.target.elements.searchQuery.value.trim();
   if (searchQuery === '') {
+    loader.classList.remove('is-hidden');
     return;
   }
   try {
@@ -54,6 +55,7 @@ async function handleSubmit(event) {
   } finally {
     loader.classList.remove('is-hidden');
   }
+  form.re;
   /////////
 }
 ////////////////////////////////////////////////
@@ -67,21 +69,17 @@ async function handleClick(event) {
 
   try {
     const response = await getData(searchQuery, page);
-    if (response.hits.length !== 0) {
-      galleryList.insertAdjacentHTML('beforeend', createMarkup(response.hits));
-      const lastPage = Math.ceil(response.totalHits / 15);
-      lastPage === page
-        ? (loadMore.classList.remove('is-hidden'),
-          iziToastMessage(
-            "We're sorry, but you've reached the end of search results.",
-            'blue'
-          ))
-        : loadMore.classList.add('is-hidden');
-      showGallery();
-    } else {
-      galleryList.innerHTML = '';
-      iziToastMessage();
-    }
+
+    galleryList.insertAdjacentHTML('beforeend', createMarkup(response.hits));
+    const lastPage = Math.ceil(response.totalHits / 15);
+    lastPage === page
+      ? (loadMore.classList.remove('is-hidden'),
+        iziToastMessage(
+          "We're sorry, but you've reached the end of search results.",
+          'blue'
+        ))
+      : loadMore.classList.add('is-hidden');
+    showGallery();
 
     const card = document.querySelector('.gallery-list-item'),
       cardHeight = card.getBoundingClientRect().height;
