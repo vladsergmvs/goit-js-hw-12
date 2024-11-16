@@ -12,7 +12,8 @@ import { createMarkup } from './js/render-functions';
 
 const form = document.querySelector('.js-search-form'),
   galleryList = document.querySelector('.js-gallery-list'),
-  loader = document.querySelector('.loader');
+  loader = document.querySelector('.loader'),
+  loadMore = document.querySelector('.js-load-more');
 
 document.querySelector('.search-input').addEventListener('click', event => {
   event.target.value = '';
@@ -23,35 +24,85 @@ document.querySelector('.search-input').addEventListener('click', event => {
 form.addEventListener('submit', handleSubmit);
 
 /////////
+let page = 1;
+let searchQuery = null;
+/////////
 async function handleSubmit(event) {
-  loader.classList.add('is-open');
   event.preventDefault();
-  const searchQuery = event.target.elements.searchQuery.value.trim();
+  loader.classList.add('is-hidden');
+  page = 1;
+  searchQuery = event.target.elements.searchQuery.value.trim();
   if (searchQuery === '') {
     return;
   }
   try {
-    const response = await getData(searchQuery);
+    const response = await getData(searchQuery, page);
     if (response.hits.length !== 0) {
       galleryList.innerHTML = createMarkup(response.hits);
-
-      let gallery = new SimpleLightbox('.js-gallery-list a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-      });
-      gallery.refresh();
+      response.totalHits > 15
+        ? loadMore.classList.add('is-hidden')
+        : loadMore.classList.remove('is-hidden');
+      showGallery();
     } else {
       galleryList.innerHTML = '';
-      iziToast.error({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
-      });
+      iziToastMessage(
+        'Sorry, there are no images matching your search query. Please try again!',
+        'red'
+      );
     }
   } catch (error) {
     console.log(error);
   } finally {
-    loader.classList.remove('is-open');
+    loader.classList.remove('is-hidden');
   }
   /////////
 }
+////////////////////////////////////////////////
+loadMore.addEventListener('click', handleClick);
+
+async function handleClick(event) {
+  page += 1;
+  loader.classList.add('is-hidden');
+
+  try {
+    const response = await getData(searchQuery, page);
+    if (response.hits.length !== 0) {
+      galleryList.insertAdjacentHTML('beforeend', createMarkup(response.hits));
+      const lastPage = Math.ceil(response.totalHits / 15);
+      lastPage === page
+        ? (loadMore.classList.remove('is-hidden'),
+          iziToastMessage(
+            "We're sorry, but you've reached the end of search results.",
+            'blue'
+          ))
+        : loadMore.classList.add('is-hidden');
+      showGallery();
+    } else {
+      galleryList.innerHTML = '';
+      iziToastMessage();
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loader.classList.remove('is-hidden');
+  }
+  ///
+}
+
+//////////////////////////////////////////////
+function showGallery() {
+  let gallery = new SimpleLightbox('.js-gallery-list a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
+  gallery.refresh();
+}
+///////////////////////////////////////////
+function iziToastMessage(message, color) {
+  iziToast.info({
+    message: `${message}`,
+    position: 'topRight',
+    color: `${color}`,
+  });
+}
+/////////////////////////////////

@@ -25,7 +25,8 @@
   .search-input:focus{
     border: 1px solid #4d5ae5;
   }
-  .search-button {
+  .search-button,
+    .load-more-button {
     display: block;
     margin-left: 8px;
     border: none;
@@ -53,13 +54,15 @@
     display: flex;
     gap: 24px;
     flex-wrap: wrap;
-     margin-top: 25px; 
+     margin-top: 24px; 
      justify-content: center;
+     margin-bottom: 24px;
   }
   
    .gallery-list-item {
+    margin: 0px;
     border: 1px solid rgba(15, 15, 15, 0.568);
-       width: calc((100% - 96px) / 5);    
+    /* width: calc((100% - 96px) / 5);     */
   } 
    
   .gallery-card-list{
@@ -79,6 +82,12 @@
       visibility: hidden;
     }
   
-    .is-open {
-      visibility: visible;
-    }
+.load-more-button{
+    visibility: hidden;
+    margin: 0 auto;
+    width: 120px;
+}
+
+ .is-hidden {
+   visibility: visible;
+ }
