@@ -56,7 +56,7 @@ async function handleSubmit(event) {
   } finally {
     loader.classList.remove('is-hidden');
   }
- // form.reset();
+  form.re;
   /////////
 }
 ////////////////////////////////////////////////
