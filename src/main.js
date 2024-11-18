@@ -45,6 +45,7 @@ async function handleSubmit(event) {
       showGallery();
     } else {
       galleryList.innerHTML = '';
+      loadMore.classList.remove('is-hidden');
       iziToastMessage(
         'Sorry, there are no images matching your search query. Please try again!',
         'red'
@@ -55,7 +56,7 @@ async function handleSubmit(event) {
   } finally {
     loader.classList.remove('is-hidden');
   }
-  form.re;
+ // form.reset();
   /////////
 }
 ////////////////////////////////////////////////
@@ -97,7 +98,7 @@ async function handleClick(event) {
   ///
 }
 
-//////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 function showGallery() {
   let gallery = new SimpleLightbox('.js-gallery-list a', {
     captionsData: 'alt',
@@ -113,4 +114,4 @@ function iziToastMessage(message, color) {
     color: `${color}`,
   });
 }
-/////////////////////////////////
+///////////////////////////////////////////////////////////////////////
